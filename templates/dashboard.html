@@ -1,0 +1,34 @@
+{% extends "layout.html" %} {% block body %}
+<h3>DashBoard</h3>
+<small>Hoşgeldin, {{session["username"]}}</small>
+<hr />
+<a href="/addarticle" class="btn btn-primary">Makale Ekle</a>
+{% if articles %}
+<table class="table table-hover mt-1">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Başlık</th>
+      <th scope="col">Yazar</th>
+      <th scope="col">Tarih</th>
+      <th scope="col">Güncelle</th>
+      <th scope="col">Sil</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in articles %}
+    <tr>
+      <th scope="row">{{i.id}}</th>
+      <td><a href="/article/{{i.id}}"> {{i.title}}</a></td>
+      <td>{{i.author}}</td>
+      <td>{{i.created_date}}</td>
+      <td><a href="/edit/{{i.id}}" class="btn btn-warning"> Güncelle</a></td>
+      <td><a href="/delete/{{i.id}}" class="btn btn-danger"> Sil</a></td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="alert alert-danger mt-2">Henüz Makaleniz Bulunmuyor</div>
+{% endif %} {% endblock body %}

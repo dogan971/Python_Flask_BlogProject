@@ -1,0 +1,9 @@
+{% extends "layout.html" %} {% block body %}
+<h3>Makale Detay Sayfası</h3>
+<hr />
+
+<small>Yazar: {{data['author']}}</small>
+<h4>Başlık:{{data.title}}</h4>
+<article>İçerik:{{data.content | safe}}</article>
+<h5>Oluşturulma Tarihi: {{data.created_date}}</h5>
+{% endblock body %}
