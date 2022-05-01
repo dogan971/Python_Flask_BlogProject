@@ -175,5 +175,32 @@ def delete(id):
     else:
         flash("Böyle bir veri yok veya yetkiniz bulunmuyor","danger")
         return redirect(url_for("index"))
+
+@app.route("/edit/<string:id>",methods=["GET","POST"])
+@login_required
+def edit(id):
+   
+    if request.method == "POST":
+        form = ArticleForm(request.form)
+        title = form.title.data
+        content = form.content.data
+        cursor = mysql.connection.cursor()
+        cursor.execute("Update articles set title = %s , content = %s where id = %s",(title,content,id))
+        mysql.connection.commit()
+        flash("Güncelleme Başarılı","success")
+        return redirect(url_for("dashboard"))
+    else:
+        cursor = mysql.connection.cursor()
+        result = cursor.execute("select * from articles where author = %s and id = %s",(session["username"],id))
+        if result > 0:
+            data = cursor.fetchone()
+            form = ArticleForm()
+            form.title.data = data["title"]
+            form.content.data = data["content"]
+            return render_template("edit.html",form=form)
+        else:
+            flash("Böyle bir veri yok veya yetkiniz bulunmuyor","danger")
+            return redirect(url_for("index"))
+
 if __name__ == "__main__": # eğer name == main se bu terminalden çalıştırılmıştır
     app.run(debug=True)
