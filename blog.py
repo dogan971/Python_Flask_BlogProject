@@ -88,7 +88,7 @@ def articles():
     result =  cursor.execute("SELECT * FROM articles")
     if result > 0 :
         data = cursor.fetchall()
-        return render_template("articles.html",data=data)
+        return render_template("articles.html",articles=data)
     else:
         flash("Herhangi Bir Makale Bulunamadı....","danger")
         return render_template("articles.html")
@@ -179,7 +179,6 @@ def delete(id):
 @app.route("/edit/<string:id>",methods=["GET","POST"])
 @login_required
 def edit(id):
-   
     if request.method == "POST":
         form = ArticleForm(request.form)
         title = form.title.data
@@ -201,6 +200,23 @@ def edit(id):
         else:
             flash("Böyle bir veri yok veya yetkiniz bulunmuyor","danger")
             return redirect(url_for("index"))
+
+# Search URL
+
+@app.route("/search",methods = ["GET","POST"])
+def search():
+    if request.method == "GET":
+        return redirect(url_for("index"))
+    else:
+        keyword = request.form.get("keyword") #request içindeki form olan değişkenden name'i keyword olanı alma
+        cursor = mysql.connection.cursor()
+        result = cursor.execute("Select * from articles where title LIKE '%" + keyword + "%'")
+        if result == 0:
+            flash("Böyle Bir Makale Bulunamadı","danger")
+            return redirect(url_for("articles"))
+        else:
+            articles = cursor.fetchall()
+            return render_template("articles.html",articles=articles)
 
 if __name__ == "__main__": # eğer name == main se bu terminalden çalıştırılmıştır
     app.run(debug=True)

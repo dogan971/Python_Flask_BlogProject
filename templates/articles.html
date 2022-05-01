@@ -3,6 +3,18 @@
 <h3>Makaleler</h3>
 <hr />
 
-{% for i in data %}
+<form action="/search" method="POST">
+  <input
+    type="text"
+    class="form-control input-sm"
+    maxlength="64"
+    placeholder="Search"
+    name="keyword"
+  />
+  <button type="submit" class="btn btn-primary btn-sm mt-2">Search</button>
+</form>
+
+<hr />
+{% for i in articles %}
 <h4><a href="/article/{{i.id}}">{{i.title}}</a></h4>
 {% endfor %} {% endblock body %}
